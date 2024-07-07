@@ -30,38 +30,13 @@ DATA = {
 #   }
 # }
 
-def omlet(request):
+def dish_view(request, dish):
     if not request.GET.get("servings"):
-        context = {"recipe": DATA.get("omlet")}
+        context = {"recipe": DATA.get(dish)}
     else:
         servings = int(request.GET.get("servings"))
-        omlet_recipe = {}
-        for ingredient, amount in DATA.get("omlet").items():
-            omlet_recipe[ingredient] = amount * servings
-        context = {"recipe": omlet_recipe}
+        recipe = {}
+        for ingredient, amount in DATA.get(dish).items():
+            recipe[ingredient] = amount * servings
+        context = {"recipe": recipe}
     return render(request, "calculator/index.html", context)
-
-
-def pasta(request):
-    if not request.GET.get("servings"):
-        context = {"recipe": DATA.get("pasta")}
-    else:
-        servings = int(request.GET.get("servings"))
-        pasta_recipe = {}
-        for ingredient, amount in DATA.get("pasta").items():
-            pasta_recipe[ingredient] = amount * servings
-        context = {"recipe": pasta_recipe}
-    return render(request, "calculator/index.html", context)
-
-
-def buter(request):
-    if not request.GET.get("servings"):
-        context = {"recipe": DATA.get("buter")}
-    else:
-        servings = int(request.GET.get("servings"))
-        buter_recipe = {}
-        for ingredient, amount in DATA.get("buter").items():
-            buter_recipe[ingredient] = amount * servings
-        context = {"recipe": buter_recipe}
-    return render(request, "calculator/index.html", context)
-
