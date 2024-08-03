@@ -22,7 +22,7 @@ class StockSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Stock
-        fields = ['id', 'address', 'products', 'positions']
+        fields = ['id', 'address', 'positions']
         read_only_fields = ['id']
 
     def create(self, validated_data):
@@ -45,7 +45,8 @@ class StockSerializer(serializers.ModelSerializer):
         stock = super().update(instance, validated_data)
 
         for position in positions:
-            StockProduct.objects.filter(stock_id=instance.id).update(
+            StockProduct.objects.update_or_create(
+                stock=stock,
                 product=position['product'],
                 quantity=position['quantity'],
                 price=position['price'],
