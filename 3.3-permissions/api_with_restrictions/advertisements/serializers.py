@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from advertisements.models import Advertisement
+from advertisements.exceptions import PostAdvForbidden
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -23,7 +24,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Advertisement
         fields = ('id', 'title', 'description', 'creator',
-                  'status', 'created_at', )
+                  'status', 'created_at',)
 
     def create(self, validated_data):
         """Метод для создания"""
@@ -40,6 +41,13 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     def validate(self, data):
         """Метод для валидации. Вызывается при создании и обновлении."""
 
-        # TODO: добавьте требуемую валидацию
-
+        if self.context["request"].method == "POST":
+            count = 0
+            for item in self.Meta.model.objects.all().filter(creator=self.context["request"].user):
+                if item.status == "OPEN":
+                    count += 1
+                    if count >= 10:
+                        break
+            if count >= 10:
+                raise PostAdvForbidden
         return data
