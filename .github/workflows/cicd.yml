@@ -2,7 +2,7 @@ name: Django Testing and Deploy
 
 on:
   push:
-    branches: [ tests ]
+    branches: [ video ]
 
 jobs:
   tests_and_deploy:
