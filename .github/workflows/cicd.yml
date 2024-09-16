@@ -61,4 +61,10 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
-          script: touch hello
+          script: | 
+            cd PythonProjects/django_homeworks
+            git pull
+            cd 3.4-django-testing/django_testing
+            source venv/bin/activate
+            pip install -r requirements.txt
+            ./restart_gunicorn.sh
