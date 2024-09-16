@@ -1,0 +1,65 @@
+name: Django Testing and Deploy
+
+on:
+  push:
+    branches: [tests]
+
+jobs:
+  tests:
+    runs-on: ubuntu-20.04
+    env:
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+    services:
+      postgres_main:
+        image: postgres:12
+        env:
+          POSTGRES_USER: ${{ env.DB_USER }}
+          POSTGRES_PASSWORD: ${{ env.DB_PASSWORD }}
+          POSTGRES_DB: ${{ env.DB_NAME }}
+        ports:
+          - 5432:5432
+        options:
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Проверяем репозиторий на наличие изменений
+        uses: actions/checkout@v2
+
+      - name: Установка python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Переход в папку с проектом
+        run: cd 3.4-django-testing/django_testing
+
+      - name: Установка библиотек
+        run: pip install -r requirements-dev.txt
+
+      - name: Тестирование
+        run: pytest
+        env:
+          SECRET_KEY: ${{ env.SECRET_KEY }}
+          DEBUG: "0"
+          ALLOWED_HOSTS: ${{ env.ALLOWED_HOSTS }}
+          DB_NAME: ${{ env.DB_NAME }}
+          DB_USER: ${{ env.DB_USER }}
+          DB_PASSWORD: ${{ env.DB_PASSWORD }}
+          DB_HOST: ${{ env.DB_HOST }}
+          DB_PORT: ${{ env.DB_PORT }}
+
+#      - name: Деплой
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.USERNAME }}
+#          password: ${{ secrets.PASSWORD }}
+#          script: expect /home/adilet/url_shortener/pull.exp
