@@ -2,7 +2,7 @@ name: Django Testing and Deploy
 
 on:
   push:
-    branches: [tests]
+    branches: [ tests ]
 
 jobs:
   tests:
@@ -38,13 +38,12 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Переход в папку с проектом
-        run: cd 3.4-django-testing/django_testing
-
       - name: Установка библиотек
+        working-directory: cd 3.4-django-testing/django_testing
         run: pip install -r requirements-dev.txt
 
       - name: Тестирование
+        working-directory: cd 3.4-django-testing/django_testing
         run: pytest
         env:
           SECRET_KEY: ${{ env.SECRET_KEY }}
