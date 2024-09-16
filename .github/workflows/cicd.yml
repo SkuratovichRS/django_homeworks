@@ -39,11 +39,11 @@ jobs:
           python-version: 3.8
 
       - name: Установка библиотек
-        working-directory: cd 3.4-django-testing/django_testing
+        working-directory: 3.4-django-testing/django_testing
         run: pip install -r requirements-dev.txt
 
       - name: Тестирование
-        working-directory: cd 3.4-django-testing/django_testing
+        working-directory: 3.4-django-testing/django_testing
         run: pytest
         env:
           SECRET_KEY: ${{ env.SECRET_KEY }}
