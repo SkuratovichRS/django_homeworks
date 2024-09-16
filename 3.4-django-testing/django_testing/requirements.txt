@@ -2,3 +2,5 @@ django
 djangorestframework
 django-filter
 psycopg2-binary
+django-environ
+
