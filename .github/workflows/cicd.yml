@@ -5,7 +5,7 @@ on:
     branches: [ tests ]
 
 jobs:
-  tests:
+  tests_and_deploy:
     runs-on: ubuntu-20.04
     env:
       DB_USER: ${{ secrets.DB_USER }}
@@ -67,4 +67,5 @@ jobs:
             cd 3.4-django-testing/django_testing
             source venv/bin/activate
             pip install -r requirements.txt
+            python manage.py migrate
             ./restart_gunicorn.sh
